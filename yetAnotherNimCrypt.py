@@ -49,7 +49,7 @@ def write_shellcode_template(technique, formated_shellcode):
         sys.exit(1)
 
 def compile_shellcode_loader(output_path):
-    subprocess.run(["nim", "c", "--app:gui", "--cpu:amd64", "--os:windows", "--gcc.exe:x86_64-w64-mingw32-gcc", "--gcc.linkerexe:x86_64-w64-mingw32-gcc", "-d:release", "-d:strip", "--opt:size", "--stdout:on", f"-o:{output_path}", f"{CWD}/build/tmp.nim"], stdout=subprocess.DEVNULL)
+    subprocess.run(["nim", "c", "--app:gui", "--cpu:amd64", "--os:windows", "--gcc.exe:x86_64-w64-mingw32-gcc", "--gcc.linkerexe:x86_64-w64-mingw32-gcc", "-d:release", "-d:strip", "--opt:size", f"-o:{output_path}", f"{CWD}/build/tmp.nim"], stdout=subprocess.DEVNULL)
     print("[+] Shellcode loader compiled")
 
 if __name__ == '__main__':
