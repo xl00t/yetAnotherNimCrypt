@@ -39,7 +39,7 @@ def convert_shellcode(shellcode_path):
 
 def write_shellcode_template(technique, formated_shellcode):
     try:
-        shutil.copyfile(f"{CWD}/stubs/{technique}.nim", f"{CWD}/build/tmp.nim")
+        shutil.copyfile(f"{CWD}/techniques/{technique}.nim", f"{CWD}/build/tmp.nim")
         shellcode_template_updated =  open(f"{CWD}/build/tmp.nim", 'r').read().replace('SHELLCODE_PLACEHOLDER', formated_shellcode)
         
         open(f"{CWD}/build/tmp.nim", 'w').write(shellcode_template_updated)

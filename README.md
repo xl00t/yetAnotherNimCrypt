@@ -38,6 +38,10 @@ xl00t@linux:/home/xl00t/Desktop/Redteam $
 
 ![Shellcode executionexample](assets/imgs/shellcode_execution_example.png)
 
+## Credits
+
+This project was inspired by the work of [Matro7sh - myph](https://github.com/matro7sh/myph).
+
 ## Contributing
 Contributions are welcome! If you find a bug or have a suggestion for improvement, please open an issue or submit a pull request.
 
