@@ -1,4 +1,4 @@
-# yetAnotherNimCrypt
+![banner](assets/imgs/banner.png)
 
 This project aims to help me develop my skills in malware development and AV/EDR evasion.
 

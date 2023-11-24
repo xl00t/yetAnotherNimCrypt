@@ -97,6 +97,8 @@ if __name__ == '__main__':
 
     shellcode = open(arguments["<shellcode_path>"], 'rb').read()
 
+    print(f"[+] Using sleep of {sleep_time} seconds")
+
     if len(key) < len(shellcode) and encryption == "xor":
         print("[-] When using xor, the key must be at least as long as quarter of the shellcode length")
         print(f"[+] Generating random key of {len(shellcode)//4} bytes")
