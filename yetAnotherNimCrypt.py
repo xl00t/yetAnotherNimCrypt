@@ -3,7 +3,7 @@
 yetAnotherNimCrypt by xl00t
 
 Usage:
-  yetAnotherNimCrypt.py <shellcode_path> [--key=<key>] [--encryption=<encryption>] [--output=<output>] [--technique=<technique>] [--sleep_time=<sleep_time>}
+  yetAnotherNimCrypt.py <shellcode_path> [--key=<key>] [--encryption=<encryption>] [--output=<output>] [--technique=<technique>] [--sleep_time=<sleep_time>]
 
 
 Options:
