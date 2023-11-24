@@ -3,7 +3,7 @@
 yetAnotherNimCrypt by xl00t
 
 Usage:
-  yetAnotherNimCrypt.py <shellcode_path> [--key=<key>] [--encryption=<encryption>] [--output=<output>] [--technique=<technique>]
+  yetAnotherNimCrypt.py <shellcode_path> [--key=<key>] [--encryption=<encryption>] [--output=<output>] [--technique=<technique>] [--sleep_time=<sleep_time>}
 
 
 Options:
@@ -91,7 +91,7 @@ if __name__ == '__main__':
     key = random_key(32) if not arguments["--key"] else arguments["--key"]
     encryption = "xor" if not arguments["--encryption"] else arguments["--encryption"]
     technique = "EnumCalendarInfo" if not arguments["--technique"] else arguments["--technique"]
-    sleep_time = str(20)
+    sleep_time = str(20) if not arguments["--sleep_time"] else arguments["--sleep_time"]
     output_path = "./payload.exe" if not arguments["--output"]  else arguments["--output"]
     shellcode_enc = None
 

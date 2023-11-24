@@ -14,7 +14,7 @@ This project aims to provide a simple and customizable way to generate shellcode
 - [x] Choose output file path
 - [ ] Multiple encryption techniques
 - [ ] Multiple execution techniques
-- [ ] Sleep time customizable
+- [x] Sleep time customizable
 - [ ] Optionnal remote process
 - [ ] Optionnal HTTP stager (encrypt the shellcode and compile the choosen template by adding a fetcher template able to download an execute the shellcode. Might use updog to serve the shellcode)
 

