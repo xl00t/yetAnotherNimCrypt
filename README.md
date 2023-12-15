@@ -12,7 +12,7 @@ This project aims to provide a simple and customizable way to generate shellcode
 
 - [x] Use custom shellcode as input
 - [x] Choose output file path
-- [ ] Multiple encryption techniques
+- [x] Multiple encryption techniques
 - [ ] Multiple execution techniques
 - [x] Sleep time customizable
 - [ ] Optionnal remote process
